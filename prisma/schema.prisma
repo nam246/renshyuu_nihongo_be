@@ -23,6 +23,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  bookMarkeds UserBookMarked[]
+
   @@map("user")
 }
 
@@ -45,66 +47,74 @@ model Lesson {
 }
 
 model Vocabulary {
-  id       String   @id @default(uuid())
-  word     String
-  kana     String?
-  romaji   String?
-  meaning  String
-  wordType WordType @map("word_type")
-  level    Level
-
-  examples Example[]
-  media    Media[]
-  lesson   Lesson?           @relation("LessonVocabularies", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  kanjis   VocabularyKanji[] // Many-to-Many qua bảng trung gian
-
+  id        String   @id @default(uuid())
+  word      String
+  kana      String?
+  romaji    String?
+  meaning   String
+  wordType  WordType @map("word_type")
+  level     Level
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  examples Example[]
+  media    Media[]
+  kanjis   VocabularyKanji[] // Many-to-Many qua bảng trung gian
+
+  lesson   Lesson? @relation("LessonVocabularies", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   lessonId String? @map("lesson_id")
+
+  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
+  userBookMarkedId String?
 
   @@index([lessonId])
   @@map("vocabulary")
 }
 
 model Grammar {
-  id          String  @id @default(uuid())
-  pattern     String
-  structure   String
-  meaning     String
-  explanation String?
-  notes       String?
-  level       Level
+  id           String   @id @default(uuid())
+  pattern      String
+  structure    String
+  meaning      String
+  explaination String?
+  notes        String?
+  level        Level
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  lessonId String?   @map("lesson_id")
-  lesson   Lesson?   @relation("LessonGrammars", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  lessonId String? @map("lesson_id")
+  lesson   Lesson? @relation("LessonGrammars", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
   examples Example[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
+  userBookMarkedId String?         @map("user_bookmarked_id")
 
   @@index([lessonId])
   @@map("grammar")
 }
 
 model Kanji {
-  id          String  @id @default(uuid())
-  character   String  @unique
+  id          String   @id @default(uuid())
+  character   String   @unique
   kana        String
   onyomi      String?
   kunyomi     String?
   meaning     String
   level       Level
-  strokeCount Int?    @map("stroke_count")
+  strokeCount Int?     @map("stroke_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  examples     Example[]
+  examples Example[]
+
   vocabularies VocabularyKanji[] // Many-to-Many qua bảng trung gian
-  lesson       Lesson?           @relation("LessonKanjis", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  lesson   Lesson? @relation("LessonKanjis", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   lessonId String? @map("lesson_id")
+
+  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
+  userBookMarkedId String?         @map("user_bookmarked_id")
 
   @@index([lessonId])
   @@map("kanji")
@@ -138,6 +148,19 @@ model Reading {
   level Level
 
   @@map("reading")
+}
+
+model UserBookMarked {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  grammars     Grammar[]
+  vocabularies Vocabulary[]
+  kanjis       Kanji[]
+
+  @@map("user_bookmarked")
 }
 
 model Media {

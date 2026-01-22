@@ -101,7 +101,7 @@ export const lessonsData: Prisma.LessonCreateInput[] = [
           pattern: '〜ます',
           structure: '動詞ます形',
           meaning: 'Thể lịch sự của động từ',
-          explanation:
+          explaination:
             'Dùng để diễn đạt hành động một cách lịch sự, trang trọng',
           notes: 'Thể cơ bản trong giao tiếp hàng ngày',
           level: Level.N5,
@@ -122,7 +122,7 @@ export const lessonsData: Prisma.LessonCreateInput[] = [
           pattern: '〜ません',
           structure: '動詞ます形 + ません',
           meaning: 'Phủ định lịch sự của động từ',
-          explanation: 'Dùng để phủ định hành động một cách lịch sự',
+          explaination: 'Dùng để phủ định hành động một cách lịch sự',
           notes: 'Thể phủ định của ます',
           level: Level.N5,
           examples: {
@@ -142,7 +142,7 @@ export const lessonsData: Prisma.LessonCreateInput[] = [
           pattern: '〜ました',
           structure: '動詞ます形 + ました',
           meaning: 'Thể quá khứ lịch sự',
-          explanation: 'Diễn đạt hành động đã xảy ra trong quá khứ',
+          explaination: 'Diễn đạt hành động đã xảy ra trong quá khứ',
           notes: 'Quá khứ của ます',
           level: Level.N5,
           examples: {
@@ -243,7 +243,7 @@ export const lessonsData: Prisma.LessonCreateInput[] = [
           pattern: '〜たい',
           structure: '動詞ます形 + たい',
           meaning: 'Muốn làm gì đó',
-          explanation: 'Diễn đạt mong muốn, ước muốn của bản thân',
+          explaination: 'Diễn đạt mong muốn, ước muốn của bản thân',
           notes: 'Chỉ dùng cho người nói (ngôi thứ nhất)',
           level: Level.N5,
           examples: {
@@ -263,7 +263,7 @@ export const lessonsData: Prisma.LessonCreateInput[] = [
           pattern: '〜てください',
           structure: '動詞て形 + ください',
           meaning: 'Xin hãy làm gì đó (nhờ vả, yêu cầu)',
-          explanation:
+          explaination:
             'Dùng để nhờ vả hoặc yêu cầu ai đó làm điều gì đó một cách lịch sự',
           notes: 'Câu mệnh lệnh lịch sự',
           level: Level.N5,

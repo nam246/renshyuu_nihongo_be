@@ -9,6 +9,7 @@ import { GrammarModule } from './grammar/grammar.module';
 import { KanjiModule } from './kanji/kanji.module';
 import { QuestionModule } from './question/question.module';
 import { MockTestModule } from './mock-test/mock-test.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MockTestModule } from './mock-test/mock-test.module';
     KanjiModule,
     QuestionModule,
     MockTestModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

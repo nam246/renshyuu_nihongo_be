@@ -1,12 +1,12 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
-import { Level } from "../../generated/prisma/enums";
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Level } from '../../generated/prisma/enums';
 
 export class QueryVocabularyDto {
-    @IsOptional()
-    @IsString()
-    lessonId?: string;
+  @IsOptional()
+  @IsString()
+  lessonId?: string;
 
-    @IsOptional()
-    @IsEnum(Level)
-    level?: Level;
+  @IsOptional()
+  @IsEnum(Level)
+  level?: Level;
 }

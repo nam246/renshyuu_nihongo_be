@@ -31,6 +31,7 @@ export class GrammarService {
           level: queryGrammarDto.level,
           lessonId: queryGrammarDto.lessonId,
         },
+        include: { examples: true },
       });
     } catch (error) {
       console.log(error);
@@ -58,6 +59,7 @@ export class GrammarService {
   async findOne(id: string) {
     const grammar = await this.prismaService.grammar.findUnique({
       where: { id },
+      include: { examples: true },
     });
 
     if (!grammar) {
