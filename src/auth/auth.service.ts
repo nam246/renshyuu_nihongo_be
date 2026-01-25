@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     const { email, username, password, name } = registerDto;
@@ -67,11 +67,11 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
-    const { email, password } = loginDto;
+    const { username, password } = loginDto;
 
-    // Find user by email
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    // Find user by username
+    const user = await this.prisma.user.findFirst({
+      where: { username },
     });
 
     if (!user) {
