@@ -36,6 +36,7 @@ export class VocabularyService {
           lessonId: queryVocabularyDto.lessonId,
           level: queryVocabularyDto.level,
         },
+        include: { examples: true },
       });
     } catch (error) {
       console.log(error);

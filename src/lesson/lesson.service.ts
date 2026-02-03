@@ -26,6 +26,11 @@ export class LessonService {
       return this.prismaService.lesson.findMany({
         orderBy: {},
         where: { level: level?.toUpperCase() as Level },
+        include: {
+          grammars: true,
+          vocabularies: true,
+          kanjis: true,
+        },
       });
     } catch (error) {
       console.log(error);

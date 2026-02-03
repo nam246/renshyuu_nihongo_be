@@ -31,6 +31,7 @@ export class KanjiService {
       return await this.prismaService.kanji.findMany({
         orderBy: { createdAt: 'desc' },
         where: { level: level?.toUpperCase() as Level },
+        include: { examples: true },
       });
     } catch (error) {
       console.log(error);
