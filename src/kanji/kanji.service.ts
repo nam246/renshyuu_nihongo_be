@@ -3,7 +3,7 @@ import { CreateKanjiDto } from './dto/create-kanji.dto';
 import { UpdateKanjiDto } from './dto/update-kanji.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { QueryKanjiDto } from './dto/query-kanji.dto';
-import { Level } from '../generated/prisma/enums';
+import { Level } from '@prisma/client';
 
 @Injectable()
 export class KanjiService {
@@ -30,7 +30,7 @@ export class KanjiService {
     try {
       return await this.prismaService.kanji.findMany({
         orderBy: { createdAt: 'desc' },
-        where: { level: level?.toUpperCase() as Level },
+        where: { level: level ? (level?.toUpperCase() as Level) : undefined },
         include: { examples: true },
       });
     } catch (error) {

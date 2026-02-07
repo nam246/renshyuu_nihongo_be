@@ -10,8 +10,8 @@ export default defineConfig({
 
   migrations: {
     path: 'prisma/migrations',
-    seed: 'pnpx tsx prisma/seed.ts'
-  }
+    seed: 'pnpx tsx prisma/seed.ts',
+  },
 
   // Nếu bạn dùng shadow database (một số PostgreSQL cần khi migrate)
   // shadowDatabaseUrl: env('SHADOW_DATABASE_URL'),

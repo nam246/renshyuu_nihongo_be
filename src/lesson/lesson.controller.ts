@@ -11,7 +11,6 @@ import {
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { Level } from '../generated/prisma/enums';
 
 @Controller('lesson')
 export class LessonController {

@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
-import { Level } from '../../generated/prisma/client';
+import { Level } from '@prisma/client';
 
 export class CreateGrammarDto {
   @IsString()

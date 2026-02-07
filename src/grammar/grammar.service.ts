@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGrammarDto } from './dto/create-grammar.dto';
 import { UpdateGrammarDto } from './dto/update-grammar.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Level } from '../generated/prisma/enums';
+import { Level } from '@prisma/client';
 import { QueryGrammarDto } from './dto/query-grammar.dto';
 
 @Injectable()

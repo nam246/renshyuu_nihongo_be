@@ -10,9 +10,11 @@ import { KanjiModule } from './kanji/kanji.module';
 import { QuestionModule } from './question/question.module';
 import { MockTestModule } from './mock-test/mock-test.module';
 import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     VocabularyModule,
     LessonModule,
     GrammarModule,

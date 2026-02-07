@@ -1,5 +1,6 @@
-import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import * as bcrypt from 'bcryptjs';
 import { lessonsData } from './data';
 
 const adapter = new PrismaPg({
@@ -10,6 +11,11 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('🌱 Starting seed...');
+
+  // Hash passwords
+  const aliceHashedPassword = await bcrypt.hash('admin', 10);
+  const bobHashedPassword = await bcrypt.hash('123456789', 10);
+
   const alice = await prisma.user.upsert({
     where: { email: 'alice@prisma.io' },
     update: {},
@@ -17,7 +23,7 @@ async function main() {
       email: 'alice@prisma.io',
       name: 'Alice Erice',
       username: 'admin',
-      password: 'admin',
+      password: aliceHashedPassword,
     },
   });
   const bob = await prisma.user.upsert({
@@ -27,7 +33,7 @@ async function main() {
       email: 'bob@prisma.io',
       name: 'Bob',
       username: 'bobbiesboba12',
-      password: '123456789',
+      password: bobHashedPassword,
     },
   });
   console.log('created user', bob, alice);

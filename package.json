@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^11.1.9",
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/adapter-ppg": "^7.3.0",
     "@prisma/client": "^7.2.0",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
@@ -91,6 +92,5 @@
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
-  },
-  "type": "commonjs"
+  }
 }

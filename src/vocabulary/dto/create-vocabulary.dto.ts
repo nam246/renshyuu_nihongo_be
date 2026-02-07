@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
-import { Level, WordType } from '../../generated/prisma/client';
+import { Level, WordType } from '@prisma/client';
 
 export class CreateVocabularyDto {
   @IsString()
