@@ -10,11 +10,13 @@ import { KanjiModule } from './kanji/kanji.module';
 import { QuestionModule } from './question/question.module';
 import { MockTestModule } from './mock-test/mock-test.module';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { ListeningModule } from './listening/listening.module';
+import { ReadingModule } from './reading/reading.module';
+import { PrismaService } from './prisma.service';
+import { BookmarkModule } from './bookmark/bookmark.module';
 
 @Module({
   imports: [
-    PrismaModule,
     VocabularyModule,
     LessonModule,
     GrammarModule,
@@ -22,8 +24,11 @@ import { PrismaModule } from './prisma/prisma.module';
     QuestionModule,
     MockTestModule,
     AuthModule,
+    ListeningModule,
+    ReadingModule,
+    BookmarkModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

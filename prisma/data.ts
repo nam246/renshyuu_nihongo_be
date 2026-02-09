@@ -1,4 +1,4 @@
-import { Prisma, Level, WordType, Source } from '@prisma/client';
+import { Prisma, Level, WordType, Source } from './generated/client';
 
 export const lessonsData: Prisma.LessonCreateInput[] = [
   // Lesson 1 - N5 Minna no Nihongo

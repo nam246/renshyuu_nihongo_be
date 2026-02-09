@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateKanjiDto } from './dto/create-kanji.dto';
 import { UpdateKanjiDto } from './dto/update-kanji.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { QueryKanjiDto } from './dto/query-kanji.dto';
-import { Level } from '@prisma/client';
+import { Level } from '../../prisma/generated/client';
 
 @Injectable()
 export class KanjiService {

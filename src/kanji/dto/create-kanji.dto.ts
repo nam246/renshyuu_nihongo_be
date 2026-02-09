@@ -6,7 +6,7 @@ import {
   IsInt,
   Min,
 } from 'class-validator';
-import { Level } from '@prisma/client';
+import { Level } from '../../../prisma/generated/client';
 import { Type } from 'class-transformer';
 
 export class CreateKanjiDto {

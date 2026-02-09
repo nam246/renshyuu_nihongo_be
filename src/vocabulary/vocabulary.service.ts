@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, Query } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { QueryVocabularyDto } from './dto/query-vocabulary.dto';

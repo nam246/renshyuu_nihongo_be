@@ -5,10 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  // provider   = "prisma-client"
-  provider     = "prisma-client-js"
-  // js_extension = true
-  output       = "../src/generated/client"
+  provider   = "prisma-client"
+  output     = "./generated"
   moduleFormat = "commonjs"
 }
 
@@ -25,9 +23,29 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  bookMarkeds UserBookMarked[]
+  bookmarks Bookmark[]
 
   @@map("user")
+}
+
+model Bookmark {
+  id           String      @id @default(uuid())
+  userId       String      @map("user_id")
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Optional relations to items (one bookmark points to exactly one item type)
+  vocabularyId String?     @map("vocabulary_id")
+  vocabulary   Vocabulary? @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  kanjiId      String?     @map("kanji_id")
+  kanji        Kanji?      @relation(fields: [kanjiId], references: [id], onDelete: Cascade)
+  grammarId    String?     @map("grammar_id")
+  grammar      Grammar?    @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  // Ensure a user can't bookmark the same item twice
+  @@unique([userId, vocabularyId])
+  @@unique([userId, kanjiId])
+  @@unique([userId, grammarId])
+  @@map("bookmark")
 }
 
 model Lesson {
@@ -66,8 +84,7 @@ model Vocabulary {
   lesson   Lesson? @relation("LessonVocabularies", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   lessonId String? @map("lesson_id")
 
-  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
-  userBookMarkedId String?
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("vocabulary")
@@ -89,8 +106,7 @@ model Grammar {
 
   examples Example[]
 
-  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
-  userBookMarkedId String?         @map("user_bookmarked_id")
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("grammar")
@@ -115,8 +131,7 @@ model Kanji {
   lesson   Lesson? @relation("LessonKanjis", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   lessonId String? @map("lesson_id")
 
-  userBookMarked   UserBookMarked? @relation(fields: [userBookMarkedId], references: [id])
-  userBookMarkedId String?         @map("user_bookmarked_id")
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("kanji")
@@ -150,19 +165,6 @@ model Reading {
   level Level
 
   @@map("reading")
-}
-
-model UserBookMarked {
-  id String @id @default(uuid())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  grammars     Grammar[]
-  vocabularies Vocabulary[]
-  kanjis       Kanji[]
-
-  @@map("user_bookmarked")
 }
 
 model Media {

@@ -24,6 +24,13 @@ CREATE TABLE "user" (
 );
 
 -- CreateTable
+CREATE TABLE "user_bookmarked" (
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "user_bookmarked_pkey" PRIMARY KEY ("userId")
+);
+
+-- CreateTable
 CREATE TABLE "lesson" (
     "id" TEXT NOT NULL,
     "lesson_title" TEXT NOT NULL,
@@ -47,6 +54,7 @@ CREATE TABLE "vocabulary" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "lesson_id" TEXT,
+    "userBookMarkedId" TEXT,
 
     CONSTRAINT "vocabulary_pkey" PRIMARY KEY ("id")
 );
@@ -57,12 +65,13 @@ CREATE TABLE "grammar" (
     "pattern" TEXT NOT NULL,
     "structure" TEXT NOT NULL,
     "meaning" TEXT NOT NULL,
-    "explanation" TEXT,
+    "explaination" TEXT,
     "notes" TEXT,
     "level" "Level" NOT NULL,
-    "lesson_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "lesson_id" TEXT,
+    "user_bookmarked_id" TEXT,
 
     CONSTRAINT "grammar_pkey" PRIMARY KEY ("id")
 );
@@ -80,6 +89,7 @@ CREATE TABLE "kanji" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "lesson_id" TEXT,
+    "user_bookmarked_id" TEXT,
 
     CONSTRAINT "kanji_pkey" PRIMARY KEY ("id")
 );
@@ -205,13 +215,25 @@ CREATE UNIQUE INDEX "vocabulary_kanji_vocabulary_id_kanji_id_key" ON "vocabulary
 CREATE INDEX "choice_question_id_idx" ON "choice"("question_id");
 
 -- AddForeignKey
+ALTER TABLE "user_bookmarked" ADD CONSTRAINT "user_bookmarked_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "vocabulary" ADD CONSTRAINT "vocabulary_lesson_id_fkey" FOREIGN KEY ("lesson_id") REFERENCES "lesson"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vocabulary" ADD CONSTRAINT "vocabulary_userBookMarkedId_fkey" FOREIGN KEY ("userBookMarkedId") REFERENCES "user_bookmarked"("userId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "grammar" ADD CONSTRAINT "grammar_lesson_id_fkey" FOREIGN KEY ("lesson_id") REFERENCES "lesson"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "grammar" ADD CONSTRAINT "grammar_user_bookmarked_id_fkey" FOREIGN KEY ("user_bookmarked_id") REFERENCES "user_bookmarked"("userId") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "kanji" ADD CONSTRAINT "kanji_lesson_id_fkey" FOREIGN KEY ("lesson_id") REFERENCES "lesson"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "kanji" ADD CONSTRAINT "kanji_user_bookmarked_id_fkey" FOREIGN KEY ("user_bookmarked_id") REFERENCES "user_bookmarked"("userId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "vocabulary_kanji" ADD CONSTRAINT "vocabulary_kanji_vocabulary_id_fkey" FOREIGN KEY ("vocabulary_id") REFERENCES "vocabulary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
