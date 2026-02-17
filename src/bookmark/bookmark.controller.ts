@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { UpdateBookmarkDto } from './dto/update-bookmark.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('bookmark')
+// @UseGuards(JwtAuthGuard)
 export class BookmarkController {
   constructor(private readonly bookmarkService: BookmarkService) {}
 
@@ -20,9 +23,23 @@ export class BookmarkController {
     return this.bookmarkService.create(createBookmarkDto);
   }
 
-  @Get()
-  findAll() {
-    return this.bookmarkService.findAll();
+  @Post('toggle')
+  toggle(@Body() createBookmarkDto: CreateBookmarkDto) {
+    return this.bookmarkService.toggle(createBookmarkDto);
+  }
+
+  @Get('status/:userId/:itemId/:itemType')
+  checkBookmarkStatus(
+    @Param('userId') userId: string,
+    @Param('itemId') itemId: string,
+    @Param('itemType') itemType: 'vocabulary' | 'grammar' | 'kanji',
+  ) {
+    return this.bookmarkService.checkBookmarkStatus(userId, itemId, itemType);
+  }
+
+  @Get(':userId')
+  findAllByUserId(@Param('userId') userId: string) {
+    return this.bookmarkService.findAllByUserId(userId);
   }
 
   @Get(':id')
