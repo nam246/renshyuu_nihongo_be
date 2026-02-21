@@ -11,12 +11,17 @@ export class KanjiService {
 
   async create(createKanjiDto: CreateKanjiDto) {
     try {
-      const { lessonId, ...kanjiData } = createKanjiDto;
+      const { lessonId, examples, exampleIds, ...kanjiData } = createKanjiDto;
       return await this.prismaService.kanji.create({
         data: {
           ...kanjiData,
-          lesson: {
-            connect: { id: lessonId },
+          lesson: lessonId
+            ? {
+                connect: { id: lessonId },
+              }
+            : undefined,
+          examples: {
+            create: examples,
           },
         },
       });
@@ -66,9 +71,24 @@ export class KanjiService {
       throw new NotFoundException(`Kanji with ID ${id} not found`);
     }
 
+    const { lessonId, examples, exampleIds, ...kanjiData } = updateKanjiDto;
+
     return await this.prismaService.kanji.update({
       where: { id },
-      data: updateKanjiDto,
+      data: {
+        ...kanjiData,
+        lesson: lessonId
+          ? {
+              connect: { id: lessonId },
+            }
+          : undefined,
+        examples: examples
+          ? {
+              deleteMany: {},
+              create: examples,
+            }
+          : undefined,
+      },
     });
   }
 

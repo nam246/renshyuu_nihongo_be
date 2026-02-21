@@ -218,7 +218,7 @@ export type KanjiGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type KanjiGroupByOutputType = {
   id: string
   character: string
-  kana: string
+  kana: string | null
   onyomi: string | null
   kunyomi: string | null
   meaning: string
@@ -255,7 +255,7 @@ export type KanjiWhereInput = {
   NOT?: Prisma.KanjiWhereInput | Prisma.KanjiWhereInput[]
   id?: Prisma.StringFilter<"Kanji"> | string
   character?: Prisma.StringFilter<"Kanji"> | string
-  kana?: Prisma.StringFilter<"Kanji"> | string
+  kana?: Prisma.StringNullableFilter<"Kanji"> | string | null
   onyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   kunyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   meaning?: Prisma.StringFilter<"Kanji"> | string
@@ -273,7 +273,7 @@ export type KanjiWhereInput = {
 export type KanjiOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   character?: Prisma.SortOrder
-  kana?: Prisma.SortOrder
+  kana?: Prisma.SortOrderInput | Prisma.SortOrder
   onyomi?: Prisma.SortOrderInput | Prisma.SortOrder
   kunyomi?: Prisma.SortOrderInput | Prisma.SortOrder
   meaning?: Prisma.SortOrder
@@ -294,7 +294,7 @@ export type KanjiWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.KanjiWhereInput | Prisma.KanjiWhereInput[]
   OR?: Prisma.KanjiWhereInput[]
   NOT?: Prisma.KanjiWhereInput | Prisma.KanjiWhereInput[]
-  kana?: Prisma.StringFilter<"Kanji"> | string
+  kana?: Prisma.StringNullableFilter<"Kanji"> | string | null
   onyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   kunyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   meaning?: Prisma.StringFilter<"Kanji"> | string
@@ -312,7 +312,7 @@ export type KanjiWhereUniqueInput = Prisma.AtLeast<{
 export type KanjiOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   character?: Prisma.SortOrder
-  kana?: Prisma.SortOrder
+  kana?: Prisma.SortOrderInput | Prisma.SortOrder
   onyomi?: Prisma.SortOrderInput | Prisma.SortOrder
   kunyomi?: Prisma.SortOrderInput | Prisma.SortOrder
   meaning?: Prisma.SortOrder
@@ -334,7 +334,7 @@ export type KanjiScalarWhereWithAggregatesInput = {
   NOT?: Prisma.KanjiScalarWhereWithAggregatesInput | Prisma.KanjiScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Kanji"> | string
   character?: Prisma.StringWithAggregatesFilter<"Kanji"> | string
-  kana?: Prisma.StringWithAggregatesFilter<"Kanji"> | string
+  kana?: Prisma.StringNullableWithAggregatesFilter<"Kanji"> | string | null
   onyomi?: Prisma.StringNullableWithAggregatesFilter<"Kanji"> | string | null
   kunyomi?: Prisma.StringNullableWithAggregatesFilter<"Kanji"> | string | null
   meaning?: Prisma.StringWithAggregatesFilter<"Kanji"> | string
@@ -348,7 +348,7 @@ export type KanjiScalarWhereWithAggregatesInput = {
 export type KanjiCreateInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -365,7 +365,7 @@ export type KanjiCreateInput = {
 export type KanjiUncheckedCreateInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -382,7 +382,7 @@ export type KanjiUncheckedCreateInput = {
 export type KanjiUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -399,7 +399,7 @@ export type KanjiUpdateInput = {
 export type KanjiUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -416,7 +416,7 @@ export type KanjiUncheckedUpdateInput = {
 export type KanjiCreateManyInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -430,7 +430,7 @@ export type KanjiCreateManyInput = {
 export type KanjiUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -443,7 +443,7 @@ export type KanjiUpdateManyMutationInput = {
 export type KanjiUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -623,7 +623,7 @@ export type KanjiUpdateOneWithoutExamplesNestedInput = {
 export type KanjiCreateWithoutBookmarksInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -639,7 +639,7 @@ export type KanjiCreateWithoutBookmarksInput = {
 export type KanjiUncheckedCreateWithoutBookmarksInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -671,7 +671,7 @@ export type KanjiUpdateToOneWithWhereWithoutBookmarksInput = {
 export type KanjiUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -687,7 +687,7 @@ export type KanjiUpdateWithoutBookmarksInput = {
 export type KanjiUncheckedUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -703,7 +703,7 @@ export type KanjiUncheckedUpdateWithoutBookmarksInput = {
 export type KanjiCreateWithoutLessonInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -719,7 +719,7 @@ export type KanjiCreateWithoutLessonInput = {
 export type KanjiUncheckedCreateWithoutLessonInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -764,7 +764,7 @@ export type KanjiScalarWhereInput = {
   NOT?: Prisma.KanjiScalarWhereInput | Prisma.KanjiScalarWhereInput[]
   id?: Prisma.StringFilter<"Kanji"> | string
   character?: Prisma.StringFilter<"Kanji"> | string
-  kana?: Prisma.StringFilter<"Kanji"> | string
+  kana?: Prisma.StringNullableFilter<"Kanji"> | string | null
   onyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   kunyomi?: Prisma.StringNullableFilter<"Kanji"> | string | null
   meaning?: Prisma.StringFilter<"Kanji"> | string
@@ -778,7 +778,7 @@ export type KanjiScalarWhereInput = {
 export type KanjiCreateWithoutVocabulariesInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -794,7 +794,7 @@ export type KanjiCreateWithoutVocabulariesInput = {
 export type KanjiUncheckedCreateWithoutVocabulariesInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -826,7 +826,7 @@ export type KanjiUpdateToOneWithWhereWithoutVocabulariesInput = {
 export type KanjiUpdateWithoutVocabulariesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -842,7 +842,7 @@ export type KanjiUpdateWithoutVocabulariesInput = {
 export type KanjiUncheckedUpdateWithoutVocabulariesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -858,7 +858,7 @@ export type KanjiUncheckedUpdateWithoutVocabulariesInput = {
 export type KanjiCreateWithoutExamplesInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -874,7 +874,7 @@ export type KanjiCreateWithoutExamplesInput = {
 export type KanjiUncheckedCreateWithoutExamplesInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -906,7 +906,7 @@ export type KanjiUpdateToOneWithWhereWithoutExamplesInput = {
 export type KanjiUpdateWithoutExamplesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -922,7 +922,7 @@ export type KanjiUpdateWithoutExamplesInput = {
 export type KanjiUncheckedUpdateWithoutExamplesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -938,7 +938,7 @@ export type KanjiUncheckedUpdateWithoutExamplesInput = {
 export type KanjiCreateManyLessonInput = {
   id?: string
   character: string
-  kana: string
+  kana?: string | null
   onyomi?: string | null
   kunyomi?: string | null
   meaning: string
@@ -951,7 +951,7 @@ export type KanjiCreateManyLessonInput = {
 export type KanjiUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -967,7 +967,7 @@ export type KanjiUpdateWithoutLessonInput = {
 export type KanjiUncheckedUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -983,7 +983,7 @@ export type KanjiUncheckedUpdateWithoutLessonInput = {
 export type KanjiUncheckedUpdateManyWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   character?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kunyomi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1131,7 +1131,7 @@ export type $KanjiPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     character: string
-    kana: string
+    kana: string | null
     onyomi: string | null
     kunyomi: string | null
     meaning: string

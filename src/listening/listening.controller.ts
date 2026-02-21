@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ListeningService } from './listening.service';
 import { CreateListeningDto } from './dto/create-listening.dto';
 import { UpdateListeningDto } from './dto/update-listening.dto';
@@ -19,16 +27,19 @@ export class ListeningController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.listeningService.findOne(+id);
+    return this.listeningService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateListeningDto: UpdateListeningDto) {
-    return this.listeningService.update(+id, updateListeningDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateListeningDto: UpdateListeningDto,
+  ) {
+    return this.listeningService.update(id, updateListeningDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.listeningService.remove(+id);
+    return this.listeningService.remove(id);
   }
 }

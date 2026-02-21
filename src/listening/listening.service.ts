@@ -12,15 +12,15 @@ export class ListeningService {
     return `This action returns all listening`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} listening`;
   }
 
-  update(id: number, updateListeningDto: UpdateListeningDto) {
+  update(id: string, updateListeningDto: UpdateListeningDto) {
     return `This action updates a #${id} listening`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} listening`;
   }
 }

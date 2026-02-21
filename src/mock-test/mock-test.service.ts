@@ -12,15 +12,15 @@ export class MockTestService {
     return `This action returns all mockTest`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} mockTest`;
   }
 
-  update(id: number, updateMockTestDto: UpdateMockTestDto) {
+  update(id: string, updateMockTestDto: UpdateMockTestDto) {
     return `This action updates a #${id} mockTest`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} mockTest`;
   }
 }

@@ -12,15 +12,15 @@ export class ReadingService {
     return `This action returns all reading`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} reading`;
   }
 
-  update(id: number, updateReadingDto: UpdateReadingDto) {
+  update(id: string, updateReadingDto: UpdateReadingDto) {
     return `This action updates a #${id} reading`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} reading`;
   }
 }

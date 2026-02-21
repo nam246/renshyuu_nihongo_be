@@ -27,7 +27,7 @@ export class MockTestController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.mockTestService.findOne(+id);
+    return this.mockTestService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class MockTestController {
     @Param('id') id: string,
     @Body() updateMockTestDto: UpdateMockTestDto,
   ) {
-    return this.mockTestService.update(+id, updateMockTestDto);
+    return this.mockTestService.update(id, updateMockTestDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.mockTestService.remove(+id);
+    return this.mockTestService.remove(id);
   }
 }

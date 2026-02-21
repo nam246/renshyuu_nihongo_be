@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ReadingService } from './reading.service';
 import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
@@ -19,16 +27,16 @@ export class ReadingController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.readingService.findOne(+id);
+    return this.readingService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReadingDto: UpdateReadingDto) {
-    return this.readingService.update(+id, updateReadingDto);
+    return this.readingService.update(id, updateReadingDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.readingService.remove(+id);
+    return this.readingService.remove(id);
   }
 }
