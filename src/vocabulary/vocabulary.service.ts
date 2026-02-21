@@ -10,15 +10,33 @@ export class VocabularyService {
 
   async create(createVocabularyDto: CreateVocabularyDto) {
     try {
-      const { kanjiId, lessonId, ...vocabularyData } = createVocabularyDto;
+      const {
+        kanjiId,
+        lessonId,
+        examples,
+        exampleIds,
+        mediaIds,
+        ...vocabularyData
+      } = createVocabularyDto;
       return await this.prismaService.vocabulary.create({
         data: {
           ...vocabularyData,
-          lesson: {
-            connect: { id: lessonId },
-          },
-          kanjis: {
-            connect: { id: kanjiId },
+          lesson: lessonId
+            ? {
+                connect: { id: lessonId },
+              }
+            : undefined,
+          kanjis: kanjiId
+            ? {
+                create: {
+                  kanji: {
+                    connect: { id: kanjiId },
+                  },
+                },
+              }
+            : undefined,
+          examples: {
+            create: examples,
           },
         },
       });
@@ -73,11 +91,70 @@ export class VocabularyService {
     }
   }
 
-  update(id: number, updateVocabularyDto: UpdateVocabularyDto) {
-    return `This action updates a #${id} vocabulary`;
+  async update(id: string, updateVocabularyDto: UpdateVocabularyDto) {
+    const existing = await this.prismaService.vocabulary.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Vocabulary with ID ${id} not found`);
+    }
+
+    const {
+      kanjiId,
+      lessonId,
+      examples,
+      exampleIds,
+      mediaIds,
+      ...vocabularyData
+    } = updateVocabularyDto;
+
+    return await this.prismaService.vocabulary.update({
+      where: { id },
+      data: {
+        ...vocabularyData,
+        lesson: lessonId
+          ? {
+              connect: { id: lessonId },
+            }
+          : undefined,
+        kanjis: kanjiId
+          ? {
+              upsert: {
+                where: {
+                  vocabularyId_kanjiId: {
+                    vocabularyId: id,
+                    kanjiId: kanjiId,
+                  },
+                },
+                create: {
+                  kanji: { connect: { id: kanjiId } },
+                },
+                update: {},
+              },
+            }
+          : undefined,
+        examples: examples
+          ? {
+              deleteMany: {},
+              create: examples,
+            }
+          : undefined,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} vocabulary`;
+  async remove(id: string) {
+    const existing = await this.prismaService.vocabulary.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Vocabulary with ID ${id} not found`);
+    }
+
+    return await this.prismaService.vocabulary.delete({
+      where: { id },
+    });
   }
 }

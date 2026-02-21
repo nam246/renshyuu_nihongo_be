@@ -47,11 +47,11 @@ export class VocabularyController {
     @Param('id') id: string,
     @Body() updateVocabularyDto: UpdateVocabularyDto,
   ) {
-    return this.vocabularyService.update(+id, updateVocabularyDto);
+    return this.vocabularyService.update(id, updateVocabularyDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.vocabularyService.remove(+id);
+    return this.vocabularyService.remove(id);
   }
 }
