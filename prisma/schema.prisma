@@ -95,7 +95,7 @@ model Grammar {
   pattern      String
   structure    String
   meaning      String
-  explaination String?
+  explanation String?
   notes        String?
   level        Level
   createdAt    DateTime @default(now()) @map("created_at")
@@ -115,7 +115,7 @@ model Grammar {
 model Kanji {
   id          String   @id @default(uuid())
   character   String   @unique
-  kana        String
+  kana        String?
   onyomi      String?
   kunyomi     String?
   meaning     String
