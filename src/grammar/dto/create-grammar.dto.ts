@@ -1,5 +1,21 @@
-import { IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
-import { Level } from '../../generated/prisma/client';
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
+import { Level } from '../../../prisma/generated/client';
+
+import { Type } from 'class-transformer';
+
+class CreateExampleDto {
+  @IsString()
+  title!: string;
+
+  @IsString()
+  description!: string;
+}
 
 export class CreateGrammarDto {
   @IsString()
@@ -13,7 +29,7 @@ export class CreateGrammarDto {
 
   @IsString()
   @IsOptional()
-  explaination?: string; // giải thích chi tiết (lưu ý: nên sửa thành "explanation" trong model)
+  explanation?: string; // Sửa lỗi chính tả explaination -> explanation
 
   @IsString()
   @IsOptional()
@@ -30,4 +46,10 @@ export class CreateGrammarDto {
   @IsString({ each: true })
   @IsOptional()
   exampleIds?: string[]; // Mảng vì examples là relation one-to-many
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExampleDto)
+  @IsOptional()
+  examples?: CreateExampleDto[]; // Nested creation
 }

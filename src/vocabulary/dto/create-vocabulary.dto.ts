@@ -1,5 +1,20 @@
-import { IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
-import { Level, WordType } from '../../generated/prisma/client';
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
+import { Level, WordType } from '../../../prisma/generated/client';
+import { Type } from 'class-transformer';
+
+export class CreateExampleDto {
+  @IsString()
+  title!: string;
+
+  @IsString()
+  description!: string;
+}
 
 export class CreateVocabularyDto {
   @IsString()
@@ -29,6 +44,12 @@ export class CreateVocabularyDto {
   @IsString()
   @IsOptional() // Nên là optional vì trong model có onDelete: SetNull
   lessonId?: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExampleDto)
+  @IsOptional()
+  examples?: CreateExampleDto[];
 
   @IsArray()
   @IsString({ each: true })

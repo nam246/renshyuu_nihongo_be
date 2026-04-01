@@ -5,16 +5,26 @@ import {
   IsArray,
   IsInt,
   Min,
+  ValidateNested,
 } from 'class-validator';
-import { Level } from '../../generated/prisma/client';
+import { Level } from '../../../prisma/generated/client';
 import { Type } from 'class-transformer';
+
+export class CreateExampleDto {
+  @IsString()
+  title!: string;
+
+  @IsString()
+  description!: string;
+}
 
 export class CreateKanjiDto {
   @IsString()
   character!: string; // @unique trong model
 
   @IsString()
-  kana!: string;
+  @IsOptional()
+  kana?: string;
 
   @IsString()
   @IsOptional()
@@ -41,10 +51,13 @@ export class CreateKanjiDto {
   lessonId?: string;
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExampleDto)
+  @IsOptional()
+  examples?: CreateExampleDto[];
+
+  @IsArray()
   @IsString({ each: true })
   @IsOptional()
   exampleIds?: string[];
-
-  // KHÔNG thêm vocabularyIds vào đây
-  // Vì Vocabulary sẽ tự link đến Kanji khi tạo
 }

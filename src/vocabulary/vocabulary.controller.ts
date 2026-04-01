@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { VocabularyService } from './vocabulary.service';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { QueryVocabularyDto } from './dto/query-vocabulary.dto';
 
 @Controller('vocabulary')
 export class VocabularyController {
@@ -17,21 +19,27 @@ export class VocabularyController {
 
   @Post()
   create(@Body() createVocabularyDto: CreateVocabularyDto) {
-    try {
-      return this.vocabularyService.create(createVocabularyDto);
-    } catch (error) {
-      console.log(error);
-    }
+    return this.vocabularyService.create(createVocabularyDto);
   }
 
   @Get()
-  findAll() {
-    return this.vocabularyService.findAll();
+  findAll(@Query() queryVocabularyDto: QueryVocabularyDto) {
+    return this.vocabularyService.findAll(queryVocabularyDto);
+  }
+
+  @Get('/flashcards')
+  getFlashcards(@Query() dto: QueryVocabularyDto & { quantity?: number }) {
+    return this.vocabularyService.getFlashcards(dto);
+  }
+
+  @Get()
+  findByLessonId(@Query('lessonId') lessonId: string) {
+    return this.vocabularyService.findByLessonId(lessonId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.vocabularyService.findOne(+id);
+    return this.vocabularyService.findOne(id);
   }
 
   @Patch(':id')
@@ -39,11 +47,11 @@ export class VocabularyController {
     @Param('id') id: string,
     @Body() updateVocabularyDto: UpdateVocabularyDto,
   ) {
-    return this.vocabularyService.update(+id, updateVocabularyDto);
+    return this.vocabularyService.update(id, updateVocabularyDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.vocabularyService.remove(+id);
+    return this.vocabularyService.remove(id);
   }
 }

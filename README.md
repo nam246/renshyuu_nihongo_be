@@ -102,3 +102,24 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Có thể tối ưu bảng Example thế này
+
+```
+enum ExampleType {
+  VOCABULARY
+  GRAMMAR
+  KANJI
+}
+
+model Example {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  type        ExampleType
+
+  refId String // trỏ tới vocabulary / grammar / kanji
+
+  @@index([type, refId])
+}
+```

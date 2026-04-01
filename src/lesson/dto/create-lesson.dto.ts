@@ -1,16 +1,14 @@
 import { IsString, IsEnum, IsOptional, IsInt, Min } from 'class-validator';
-import { Level } from '../../generated/prisma/client';
+import { Level, Source } from '../../../prisma/generated/client';
 import { Type } from 'class-transformer';
 
 export class CreateLessonDto {
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  lessonNumber!: number; // Số bài học
-
   @IsString()
+  lessonTitle!: string; // Số bài học
+
+  @IsEnum(Source)
   @IsOptional()
-  source?: string; // minna no nihongo? || soumatome?
+  source?: Source; // minna no nihongo? || soumatome?
 
   @IsEnum(Level)
   level!: Level;

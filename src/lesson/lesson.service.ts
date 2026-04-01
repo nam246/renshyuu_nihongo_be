@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
+import { Level } from '../../prisma/generated/client';
 
 @Injectable()
 export class LessonService {
@@ -20,10 +21,16 @@ export class LessonService {
     }
   }
 
-  async findAll() {
+  async findAll(level?: string) {
     try {
       return this.prismaService.lesson.findMany({
         orderBy: {},
+        where: { level: level?.toUpperCase() as Level },
+        include: {
+          grammars: true,
+          vocabularies: true,
+          kanjis: true,
+        },
       });
     } catch (error) {
       console.log(error);

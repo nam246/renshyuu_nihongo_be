@@ -6,13 +6,12 @@
 
 generator client {
   provider     = "prisma-client"
-  output       = "../src/generated/prisma"
+  output       = "./generated"
   moduleFormat = "commonjs"
 }
 
 datasource db {
   provider = "postgresql"
-  // provider = "sqlite" // for local dev test
 }
 
 model User {
@@ -24,19 +23,43 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  bookmarks Bookmark[]
+
   @@map("user")
 }
 
+model Bookmark {
+  id           String      @id @default(uuid())
+  userId       String      @map("user_id")
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Optional relations to items (one bookmark points to exactly one item type)
+  vocabularyId String?     @map("vocabulary_id")
+  vocabulary   Vocabulary? @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  kanjiId      String?     @map("kanji_id")
+  kanji        Kanji?      @relation(fields: [kanjiId], references: [id], onDelete: Cascade)
+  grammarId    String?     @map("grammar_id")
+  grammar      Grammar?    @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  // Ensure a user can't bookmark the same item twice
+  @@unique([userId, vocabularyId])
+  @@unique([userId, kanjiId])
+  @@unique([userId, grammarId])
+  @@map("bookmark")
+}
+
 model Lesson {
-  id           String       @id @default(uuid())
-  lessonNumber Int          @unique @map("lesson_number") // Thêm @unique vì số bài không trùng
+  id          String @id @default(uuid())
+  lessonTitle String @map("lesson_title") // Thay thành lessonTitle VD: "Unit 1: Danh từ" hoặc "Bài 1" hoặc "Section 1: Chào hỏi"
+  source      Source @default(OTHER) // minna no nihongo? || soumatome?
+  level       Level
+
   vocabularies Vocabulary[] @relation("LessonVocabularies") // 1 - n bảng Vocabulary
   grammars     Grammar[]    @relation("LessonGrammars") // 1 - n bảng Grammar
   kanjis       Kanji[]      @relation("LessonKanjis") // 1 - n bảng Kanji
-  source       String? // minna no nihongo? || soumatome?
-  level        Level
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([level]) // Index cho query theo level
   @@index([source]) // Index cho query theo source
@@ -44,74 +67,85 @@ model Lesson {
 }
 
 model Vocabulary {
-  id        String            @id @default(uuid())
+  id        String   @id @default(uuid())
   word      String
   kana      String?
   romaji    String?
   meaning   String
-  wordType  WordType          @map("word_type")
+  wordType  WordType @map("word_type")
   level     Level
-  examples  Example[]
-  media     Media[]
-  lesson    Lesson?           @relation("LessonVocabularies", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  kanjis    VocabularyKanji[] // Many-to-Many qua bảng trung gian
-  createdAt DateTime          @default(now()) @map("created_at")
-  updatedAt DateTime          @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  lessonId String?
+  examples Example[]
+  media    Media[]
+  kanjis   VocabularyKanji[] // Many-to-Many qua bảng trung gian
+
+  lesson   Lesson? @relation("LessonVocabularies", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  lessonId String? @map("lesson_id")
+
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("vocabulary")
 }
 
 model Grammar {
-  id          String    @id @default(uuid())
-  pattern     String
-  structure   String
-  meaning     String
-  explanation String? // Sửa typo
-  notes       String?
-  examples    Example[]
-  level       Level
-  lesson      Lesson?   @relation("LessonGrammars", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade) // Thêm relation name
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  pattern      String
+  structure    String
+  meaning      String
+  explanation String?
+  notes        String?
+  level        Level
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  lessonId String?
+  lessonId String? @map("lesson_id")
+  lesson   Lesson? @relation("LessonGrammars", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  examples Example[]
+
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("grammar")
 }
 
 model Kanji {
-  id           String            @id @default(uuid())
-  character    String            @unique
-  kana         String
-  onyomi       String?
-  kunyomi      String?
-  meaning      String
-  level        Level
-  strokeCount  Int?              @map("stroke_count")
-  examples     Example[]
-  vocabularies VocabularyKanji[] // Many-to-Many qua bảng trung gian
-  lesson       Lesson?           @relation("LessonKanjis", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime          @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  character   String   @unique
+  kana        String?
+  onyomi      String?
+  kunyomi     String?
+  meaning     String
+  level       Level
+  strokeCount Int?     @map("stroke_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  lessonId String?
+  examples Example[]
+
+  vocabularies VocabularyKanji[] // Many-to-Many qua bảng trung gian
+
+  lesson   Lesson? @relation("LessonKanjis", fields: [lessonId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  lessonId String? @map("lesson_id")
+
+  bookmarks Bookmark[]
 
   @@index([lessonId])
   @@map("kanji")
 }
 
 model VocabularyKanji {
-  id         String     @id @default(uuid())
+  id       String @id @default(uuid())
+  position Int? // Vị trí của kanji trong từ (tuỳ chọn)
+
+  vocabularyId String @map("vocabulary_id")
+  kanjiId      String @map("kanji_id")
+
   vocabulary Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
   kanji      Kanji      @relation(fields: [kanjiId], references: [id], onDelete: Cascade)
-  position   Int? // Vị trí của kanji trong từ (tuỳ chọn)
-
-  vocabularyId String
-  kanjiId      String
 
   @@unique([vocabularyId, kanjiId]) // Không cho trùng lặp
   @@index([vocabularyId])
@@ -134,14 +168,15 @@ model Reading {
 }
 
 model Media {
-  id        String   @id @default(uuid())
-  audio     String?
-  image     String?
+  id    String  @id @default(uuid())
+  audio String?
+  image String?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   vocabulary   Vocabulary? @relation(fields: [vocabularyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  vocabularyId String?
+  vocabularyId String?     @map("vocabulary_id")
 
   @@map("media")
 }
@@ -151,14 +186,60 @@ model Example {
   title       String
   description String
 
+  vocabularyId String?     @map("vocabulary_id")
   vocabulary   Vocabulary? @relation(fields: [vocabularyId], references: [id])
-  vocabularyId String?
+  grammarId    String?     @map("grammar_id")
   grammar      Grammar?    @relation(fields: [grammarId], references: [id])
-  grammarId    String?
+  kanjiId      String?     @map("kanji_id")
   kanji        Kanji?      @relation(fields: [kanjiId], references: [id])
-  kanjiId      String?
 
   @@map("example")
+}
+
+// Mock test relation table 
+model Test {
+  id    String @id @default(uuid())
+  level Level
+
+  question Question[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("test")
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  content      String
+  level        Level
+  questionType QuestionType @map("question_type")
+  mediaUrl     String?
+
+  choice Choice[]
+  testId String   @map("test_id")
+  test   Test     @relation(fields: [testId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("question")
+}
+
+model Choice {
+  id        String  @id @default(uuid())
+  title     String
+  point     Float?
+  isCorrect Boolean @map("is_correct")
+
+  questionId String   @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([questionId])
+  @@map("choice")
 }
 
 // JLPT Level
@@ -182,4 +263,33 @@ enum WordType {
   EXPRESSION
   COUNTER
   OTHER
+}
+
+enum Source {
+  MINNA_NO_NIHONGO
+  SOUMATOME
+  OTHER
+}
+
+// Trong bài thi JLPT có các loại câu hỏi
+// Ví dụ: Câu hỏi về từ vựng, câu hỏi về kanji, sắp xếp từ, câu hỏi về nghe, câu hỏi cho bài đọc ngắn, dài,...
+enum QuestionType {
+  VOCABULARY_CONTEXT_USAGE // Điền từ vào văn cảnh (文脈規定).
+  VOCABULARY_SYNONYMS // Từ đồng nghĩa (言い換え).
+  VOCABULARY_WORD_USAGE // Cách dùng từ (用法).
+  KANJI_READING // Cách đọc Hán tự.
+  KANJI_WRITING // Cách viết Hán tự (表記).
+  GRAMMAR_SELECT // Ngữ pháp trong câu.
+  GRAMMAR_STAR_ORDER // Sắp xếp câu (Dấu sao).
+  GRAMMAR_TEXT_GRAMMAR // Ngữ pháp trong đoạn văn.
+  READING_SHORT_PASSAGE // Đoạn văn ngắn.
+  READING_MEDIUM_PASSAGE // Đoạn văn trung bình.
+  READING_LONG_PASSAGE // Đoạn văn dài.
+  READING_COMPARISION // So sánh đối chiếu.
+  READING_INFO_RETRIEVAL // Tìm kiếm thông tin.
+  LISTENING_TASK_BASED // Hiểu yêu cầu (cần làm gì tiếp theo).
+  LISTENING_KEY_POINT // Hiểu điểm chính.
+  LISTENING_GENERAL_UNDERSTANDING // Hiểu khái quát.
+  LISTENING_QUICK_RESPONSE // Phản xạ nhanh.
+  LISTENING_INTEGRATED_COMPREHENSION // Hiểu tổng hợp.
 }

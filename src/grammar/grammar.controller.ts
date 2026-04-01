@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { GrammarService } from './grammar.service';
 import { CreateGrammarDto } from './dto/create-grammar.dto';
 import { UpdateGrammarDto } from './dto/update-grammar.dto';
+import { QueryGrammarDto } from './dto/query-grammar.dto';
 
 @Controller('grammar')
 export class GrammarController {
@@ -13,8 +23,14 @@ export class GrammarController {
   }
 
   @Get()
-  findAll() {
-    return this.grammarService.findAll();
+  findAll(@Query() queryGrammarDto: QueryGrammarDto) {
+    return this.grammarService.findAll(queryGrammarDto);
+  }
+
+  // chắc xóa cái này đi, gộp lại 1 cái Query param trong findAll thôi.
+  @Get()
+  findGrammarByLevel(@Query() level: string) {
+    return this.grammarService.findGrammarByLevel(level);
   }
 
   @Get(':id')

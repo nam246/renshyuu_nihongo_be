@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
@@ -13,8 +22,8 @@ export class LessonController {
   }
 
   @Get()
-  findAll() {
-    return this.lessonService.findAll();
+  findAll(@Query('level') level?: string) {
+    return this.lessonService.findAll(level);
   }
 
   @Get(':id')

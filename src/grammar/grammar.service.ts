@@ -1,18 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGrammarDto } from './dto/create-grammar.dto';
 import { UpdateGrammarDto } from './dto/update-grammar.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
+import { Level, Prisma } from '../../prisma/generated/client';
+import { QueryGrammarDto } from './dto/query-grammar.dto';
 
 @Injectable()
 export class GrammarService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createGrammarDto: CreateGrammarDto) {
-    // const {lessonId,  ...grammarData} = createGrammarDto
+    const { examples, exampleIds, explanation, ...rest } = createGrammarDto;
+
+    const examplesInput: Prisma.GrammarCreateInput['examples'] = {};
+    if (examples && examples.length > 0) {
+      examplesInput.create = examples;
+    }
+    if (exampleIds && exampleIds.length > 0) {
+      examplesInput.connect = exampleIds.map((id) => ({ id }));
+    }
+
     try {
       return await this.prismaService.grammar.create({
         data: {
-          ...createGrammarDto,
+          ...rest,
+          explaination: explanation,
+          examples:
+            Object.keys(examplesInput).length > 0 ? examplesInput : undefined,
         },
       });
     } catch (error: any) {
@@ -21,11 +35,33 @@ export class GrammarService {
     }
   }
 
-  async findAll() {
+  async findAll(queryGrammarDto: QueryGrammarDto) {
     try {
       return this.prismaService.grammar.findMany({
         orderBy: { createdAt: 'desc' },
+        where: {
+          level: queryGrammarDto.level,
+          lessonId: queryGrammarDto.lessonId,
+        },
+        include: { examples: true },
       });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async findGrammarByLevel(level: string) {
+    try {
+      const grammar = await this.prismaService.grammar.findMany({
+        where: { level: level as Level },
+      });
+      if (grammar.length < 0) {
+        throw new NotFoundException(
+          `There are no grammar at this ${level} yet!`,
+        );
+      }
+      return grammar;
     } catch (error) {
       console.log(error);
       throw error;
@@ -35,6 +71,7 @@ export class GrammarService {
   async findOne(id: string) {
     const grammar = await this.prismaService.grammar.findUnique({
       where: { id },
+      include: { examples: true },
     });
 
     if (!grammar) {
@@ -52,9 +89,13 @@ export class GrammarService {
       throw new NotFoundException(`Grammar with ID ${id} not found`);
     }
 
+    const { examples, exampleIds, explanation, ...rest } = updateGrammarDto;
     return await this.prismaService.grammar.update({
       where: { id },
-      data: updateGrammarDto,
+      data: {
+        ...rest,
+        explaination: explanation,
+      },
     });
   }
 

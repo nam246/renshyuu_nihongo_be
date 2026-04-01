@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateKanjiDto } from './dto/create-kanji.dto';
 import { UpdateKanjiDto } from './dto/update-kanji.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
+import { QueryKanjiDto } from './dto/query-kanji.dto';
+import { Level } from '../../prisma/generated/client';
 
 @Injectable()
 export class KanjiService {
@@ -9,12 +11,17 @@ export class KanjiService {
 
   async create(createKanjiDto: CreateKanjiDto) {
     try {
-      const { lessonId, ...kanjiData } = createKanjiDto;
+      const { lessonId, examples, exampleIds, ...kanjiData } = createKanjiDto;
       return await this.prismaService.kanji.create({
         data: {
           ...kanjiData,
-          lesson: {
-            connect: { id: lessonId },
+          lesson: lessonId
+            ? {
+                connect: { id: lessonId },
+              }
+            : undefined,
+          examples: {
+            create: examples,
           },
         },
       });
@@ -24,35 +31,29 @@ export class KanjiService {
     }
   }
 
-  async findAll(page: number = 1, limit: number = 10) {
+  async findAll(level?: string) {
     try {
-      const skip = (page - 1) * limit;
-      const take = limit;
-      const [data, total] = await this.prismaService.$transaction([
-        this.prismaService.kanji.findMany({
-          skip,
-          take,
-          orderBy: { createdAt: 'desc' },
-        }),
-        this.prismaService.kanji.count(),
-      ]);
-
-      return {
-        data,
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      };
+      return await this.prismaService.kanji.findMany({
+        orderBy: { createdAt: 'desc' },
+        where: { level: level ? (level?.toUpperCase() as Level) : undefined },
+        include: { examples: true },
+      });
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
 
+  async getFlashcards(dto: QueryKanjiDto & { quantity?: number }) {
+    return await this.prismaService.kanji.findMany({
+      where: { level: dto.level },
+    });
+  }
+
   async findOne(id: string) {
     const kanji = await this.prismaService.kanji.findUnique({
       where: { id },
+      include: { examples: true },
     });
 
     if (!kanji) {
@@ -70,9 +71,24 @@ export class KanjiService {
       throw new NotFoundException(`Kanji with ID ${id} not found`);
     }
 
+    const { lessonId, examples, exampleIds, ...kanjiData } = updateKanjiDto;
+
     return await this.prismaService.kanji.update({
       where: { id },
-      data: updateKanjiDto,
+      data: {
+        ...kanjiData,
+        lesson: lessonId
+          ? {
+              connect: { id: lessonId },
+            }
+          : undefined,
+        examples: examples
+          ? {
+              deleteMany: {},
+              create: examples,
+            }
+          : undefined,
+      },
     });
   }
 
