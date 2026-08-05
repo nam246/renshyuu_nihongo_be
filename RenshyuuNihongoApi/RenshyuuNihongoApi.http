@@ -1,0 +1,6 @@
+@RenshyuuNihongoApi_HostAddress = http://localhost:5228
+
+GET {{RenshyuuNihongoApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
