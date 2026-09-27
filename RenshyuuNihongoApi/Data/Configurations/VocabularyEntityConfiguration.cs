@@ -1,61 +1,54 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RenshyuuNihongoApi.Models;
-
+using RenshyuuNihongoApi.Enums;
 namespace RenshyuuNihongoApi.Data.Configurations;
 
 public class VocabularyEntityConfiguration : IEntityTypeConfiguration<Vocabulary>
 {
     public void Configure(EntityTypeBuilder<Vocabulary> entity)
     {
-        entity.ToTable("vocabulary");
+        /*
+         * Loai bo .HasColumnName() vì o Program.cs đã có options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention()
+         */
         
         entity.HasKey(v => v.Id);
         
         entity.Property(v => v.Id)
-            .HasColumnName("id")
             .HasDefaultValueSql("gen_random_uuid()")
             .IsRequired();
             
         entity.Property(v => v.Word)
-            .HasColumnName("word")
             .HasMaxLength(255)
             .IsRequired();
         
         entity.Property(v => v.Kana)
-            .HasColumnName("kana")
             .HasMaxLength(255)
             .IsRequired();
             
         entity.Property(v => v.Romaji)
-            .HasColumnName("romaji")
             .HasMaxLength(255)
             .IsRequired();
             
         entity.Property(v => v.Meaning)
-            .HasColumnName("meaning")
             .IsRequired();
             
         entity.Property(v => v.WordType)
-            .HasColumnName("word_type")
             .HasConversion<string>()
             .IsRequired();
             
         entity.Property(v => v.Level)
-            .HasColumnName("level")
             .HasConversion<string>()
             .IsRequired();
             
         entity.Property(v => v.LessonId)
-            .HasColumnName("lesson_id");
+          ;
             
         entity.Property(v => v.CreatedAt)
-            .HasColumnName("created_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .IsRequired();
             
         entity.Property(v => v.UpdatedAt)
-            .HasColumnName("updated_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .ValueGeneratedOnAddOrUpdate()
             .IsRequired();
@@ -67,6 +60,7 @@ public class VocabularyEntityConfiguration : IEntityTypeConfiguration<Vocabulary
         entity.HasOne(v => v.Lesson)
             .WithMany(l => l.Vocabularies)
             .HasForeignKey(v => v.LessonId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("FK_vocabulary_lesson_id");
         
@@ -74,5 +68,49 @@ public class VocabularyEntityConfiguration : IEntityTypeConfiguration<Vocabulary
             .WithOne(e => e.Vocabulary)
             .HasForeignKey(e => e.VocabularyId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Seed data
+        var lessonId = SeedData.LessonId;
+        entity.HasData(
+            new Vocabulary
+            {
+                Id = SeedData.VocabularyId,
+                Word = "私",
+                Kana = "わたし",
+                Romaji = "watashi",
+                Meaning = "Tôi",
+                WordType = WordType.PRONOUN,
+                Level = Level.N5,
+                LessonId = lessonId,
+                CreatedAt = SeedData.Timestamp,
+                UpdatedAt = SeedData.Timestamp
+            },
+            new Vocabulary
+            {
+                Id = SeedData.VocabularyId2,
+                Word = "あなた",
+                Kana = "あなた",
+                Romaji = "anata",
+                Meaning = "Bạn",
+                WordType = WordType.PRONOUN,
+                Level = Level.N5,
+                LessonId = lessonId,
+                CreatedAt = SeedData.Timestamp,
+                UpdatedAt = SeedData.Timestamp
+            },
+            new Vocabulary
+            {
+                Id = SeedData.VocabularyId3,
+                Word = "食べる",
+                Kana = "たべる",
+                Romaji = "taberu",
+                Meaning = "Ăn",
+                WordType = WordType.VERB,
+                Level = Level.N5,
+                LessonId = lessonId,
+                CreatedAt = SeedData.Timestamp,
+                UpdatedAt = SeedData.Timestamp
+            }
+        );
     }
 }

@@ -2,7 +2,7 @@ using RenshyuuNihongoApi.Enums;
 
 namespace RenshyuuNihongoApi.DTOs;
 
-public class VocabularyCreateDto
+public class VocabularyUpdateDto
 {
     public string Word { get; set; } = string.Empty;
     public string Kana { get; set; } = string.Empty;
@@ -10,5 +10,5 @@ public class VocabularyCreateDto
     public string Meaning { get; set; } = string.Empty;
     public WordType WordType { get; set; }
     public Level Level { get; set; }
-    public Guid? LessonId { get; set; }
+    public Guid? LessonId {get; set;}
 }

@@ -1,19 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using RenshyuuNihongoApi.Enums;
-using RenshyuuNihongoApi.Models.Base;
 
-namespace RenshyuuNihongoApi.Models;
+namespace RenshyuuNihongoApi.DTOs;
 
-public class Grammar : BaseModel
+public class GrammarUpdateDto
 {
+    [Required]
+    public Guid Id { get; set; }
     public string Pattern { get; set; } = null!;
     public string Structure { get; set; } = null!;
     public string Meaning { get; set; } = null!;
     public string? Explanation { get; set; }
-    public List<string>? Notes { get; set; }
+    public List<string?> Notes { get; set; } = new();
     public Level Level { get; set; }
     public Guid LessonId { get; set; }
-    public Lesson Lesson { get; set; } = null!;
-
-    public ICollection<Example> Examples { get; set; } = new List<Example>();
 }

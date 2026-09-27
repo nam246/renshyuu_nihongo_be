@@ -1,15 +1,15 @@
-using System.ComponentModel.DataAnnotations;
+using System.Data;
+using RenshyuuNihongoApi.Models;
 using RenshyuuNihongoApi.Enums;
-using RenshyuuNihongoApi.Models.Base;
 
-namespace RenshyuuNihongoApi.Models;
+namespace RenshyuuNihongoApi.DTOs;
 
-public class Lesson : BaseModel
+public class LessonResponseDto
 {
+    public Guid Id { get; set; }
     public int LessonNumber { get; set; }
-    public string? Source { get; set; }
     public Level Level { get; set; }
- 
+    public string? Source { get; set; }
     public ICollection<Vocabulary> Vocabularies { get; set; } = new List<Vocabulary>();
     public ICollection<Grammar> Grammars { get; set; } = new List<Grammar>();
     public ICollection<Kanji> Kanjis { get; set; } = new List<Kanji>();

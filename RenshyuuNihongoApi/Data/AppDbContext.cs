@@ -13,6 +13,8 @@ public class AppDbContext : DbContext
     public DbSet<Vocabulary> Vocabularies { get; set; }
     public DbSet<Grammar> Grammars { get; set; }
     public DbSet<Kanji> Kanjis { get; set; }
+    public DbSet<MockTest> MockTests { get; set; }
+    public DbSet<Question> Questions { get; set; }
     // public DbSet<VocabularyKanji> VocabularyKanjis { get; set; }
     // public DbSet<Listening> Listenings { get; set; }
     // public DbSet<Reading> Readings { get; set; }
@@ -21,9 +23,9 @@ public class AppDbContext : DbContext
  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new LessonEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new VocabularyEntityConfiguration());
+        //modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+        //modelBuilder.ApplyConfiguration(new LessonEntityConfiguration());
+        //modelBuilder.ApplyConfiguration(new VocabularyEntityConfiguration());
         // modelBuilder.ApplyConfiguration(new GrammarEntityConfiguration());
         // modelBuilder.ApplyConfiguration(new KanjiEntityConfiguration());
         // modelBuilder.ApplyConfiguration(new VocabularyKanjiEntityConfiguration());
@@ -31,6 +33,7 @@ public class AppDbContext : DbContext
         // modelBuilder.ApplyConfiguration(new ReadingEntityConfiguration());
         // modelBuilder.ApplyConfiguration(new MediaEntityConfiguration());
         // modelBuilder.ApplyConfiguration(new ExampleEntityConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
  
         base.OnModelCreating(modelBuilder);
     }

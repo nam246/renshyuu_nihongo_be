@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using RenshyuuNihongoApi.Models.Base;
 
 namespace RenshyuuNihongoApi.Models;
 
-public class Example
+public class Example : BaseModel
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
 

@@ -11,7 +11,7 @@ public class VocabularyResponseDto
     public string Meaning { get; set; } = string.Empty;
     public WordType WordType { get; set; }
     public Level Level { get; set; }
-    public string? LessonId {get; set;}
+    public Guid? LessonId {get; set;}
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

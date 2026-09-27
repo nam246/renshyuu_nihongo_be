@@ -22,30 +22,43 @@ public class VocabularyController : ControllerBase
     {
         Console.WriteLine("access from vocabulary/id");
         _logger.LogDebug("message from id");
-        return Ok(await _service.GetByIdAsync(id, cancellationToken));
+        return Ok(await _service.FindByIdAsync(id, cancellationToken));
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPaged(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPaged([FromQuery] VocabularyQueryParams queryParams,
+        CancellationToken cancellationToken)
     {
-        Console.WriteLine("access from vocabulary");
-        throw new NotImplementedException();
+        return Ok(await _service.FindAllAsync(queryParams, cancellationToken));
     }
 
-    // [HttpPost]
-    // public async Task<ActionResult<VocabularyCreateDto>> Create(VocabularyCreateDto dto)
-    // {
-    //     if (!ModelState.IsValid)
-    //         return BadRequest(ModelState);
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] VocabularyCreateDto dto, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //     try
-    //     {
-    //         var result = await _service.CreateAsync(dto);
-    //         return result;
-    //     }
-    //     catch (InvalidOperationException ex)
-    //     {
-    //         return Conflict(new { message = ex.Message }); // 409
-    //     }
-    // }
+        try
+        {
+            var result = await _service.CreateAsync(dto, cancellationToken);
+            return Ok(await _service.CreateAsync(dto, cancellationToken));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message }); // 409
+        }
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] VocabularyUpdateDto dto,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _service.UpdateAsync(id, dto, cancellationToken));
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        return Ok(await _service.DeleteAsync(id, cancellationToken));
+    }
 }

@@ -4,6 +4,9 @@ using RenshyuuNihongoApi.Interfaces;
 using RenshyuuNihongoApi.Middlewares;
 using RenshyuuNihongoApi.Repositories;
 using RenshyuuNihongoApi.Services;
+using RenshyuuNihongoApi.Services.Grammar;
+using RenshyuuNihongoApi.Services.Lesson;
+using RenshyuuNihongoApi.Services.Kanji;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,14 +21,31 @@ builder.Services.AddControllers();
 // Database Context
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 
 // Dependency Injection Registrations
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IVocabularyService, VocabularyService>();
+builder.Services.AddScoped<IGrammarService, GrammarService>();
+builder.Services.AddScoped<IKanjiService, KanjiService>();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecific", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://yourdomain.com")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials(); // chỉ dùng nếu cần gửi cookie/auth header
+    });
+});
 
 var app = builder.Build();
+
+app.UseCors("AllowSpecific"); // đặt TRƯỚC UseAuthorization()
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
